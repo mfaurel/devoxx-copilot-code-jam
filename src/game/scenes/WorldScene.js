@@ -138,7 +138,7 @@ export class WorldScene extends Scene
     _spawnEnemies () {
         this.enemySprites = [];
         const ps = PlayerState.get();
-        ENEMIES.forEach((enemy) => {
+        ENEMIES.forEach((enemy, i) => {
             if (PlayerState.isEnemyDefeated(enemy.id)) return;
             const { x, y } = isoToScreen(enemy.position.col, enemy.position.row);
             const g = this.add.graphics();
