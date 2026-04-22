@@ -4,6 +4,7 @@ import { ENEMIES } from '../EnemiesData';
 import { NPC_DIALOGUES } from '../DialoguesData';
 import { PlayerState } from '../PlayerState';
 import { DialogSystem } from '../DialogSystem';
+import { drawPixelSprite, getPlayerSprite, getEnemySprite, NPC_SPRITE, NPC_PALETTE } from '../SpriteData';
 
 const TILE_W = 64;
 const TILE_H = 32;
@@ -142,7 +143,7 @@ export class WorldScene extends Scene
             if (PlayerState.isEnemyDefeated(enemy.id)) return;
             const { x, y } = isoToScreen(enemy.position.col, enemy.position.row);
             const g = this.add.graphics();
-            this._drawEnemySprite(g, enemy.color);
+            this._drawEnemySprite(g, enemy.id);
             g.setPosition(x, y - 16);
             g.setDepth(y);
 
@@ -172,7 +173,7 @@ export class WorldScene extends Scene
         NPC_DIALOGUES.forEach(npc => {
             const { x, y } = isoToScreen(npc.position.col, npc.position.row);
             const g = this.add.graphics();
-            this._drawNPCSprite(g, npc.color);
+            this._drawNPCSprite(g);
             g.setPosition(x, y - 16);
             g.setDepth(y);
 
@@ -210,49 +211,23 @@ export class WorldScene extends Scene
 
     _drawPlayerSprite (g) {
         g.clear();
-        const char = PlayerState.get();
-        // Pick color based on characterId
-        const colors = { java: 0xf89820, platform: 0x4a90d9, ia: 0xa855f7 };
-        const color = colors[char.characterId] || 0xffd166;
-        // Body
-        g.fillStyle(color, 1);
-        g.fillRect(-10, 0, 20, 22);
-        // Head
-        g.fillStyle(0xffd166, 1);
-        g.fillCircle(0, -8, 10);
-        // Eyes
-        g.fillStyle(0x080818, 1);
-        g.fillCircle(-3, -9, 1.5);
-        g.fillCircle(3, -9, 1.5);
-        // Badge
-        g.fillStyle(0xffffff, 1);
-        g.fillRect(-4, 4, 8, 5);
+        const { characterId } = PlayerState.get();
+        const { data, palette } = getPlayerSprite(characterId || 'java');
+        const scale = 2;
+        drawPixelSprite(g, data, palette, scale, -8 * scale, -16 * scale);
     }
 
-    _drawEnemySprite (g, color) {
+    _drawEnemySprite (g, enemyId) {
         g.clear();
-        g.fillStyle(color, 1);
-        g.fillRect(-10, 0, 20, 22);
-        g.fillStyle(0xffe8d6, 1);
-        g.fillCircle(0, -8, 10);
-        g.fillStyle(color, 0.8);
-        g.fillCircle(-3, -9, 2);
-        g.fillCircle(3, -9, 2);
-        // Evil eyebrows
-        g.lineStyle(2, 0x222222);
-        g.lineBetween(-6, -14, -1, -12);
-        g.lineBetween(6, -14, 1, -12);
+        const { data, palette } = getEnemySprite(enemyId);
+        const scale = 2;
+        drawPixelSprite(g, data, palette, scale, -8 * scale, -16 * scale);
     }
 
-    _drawNPCSprite (g, color) {
+    _drawNPCSprite (g) {
         g.clear();
-        g.fillStyle(color, 0.9);
-        g.fillRect(-9, 0, 18, 20);
-        g.fillStyle(0xffd166, 1);
-        g.fillCircle(0, -8, 9);
-        g.fillStyle(0x080818, 1);
-        g.fillCircle(-3, -9, 1.5);
-        g.fillCircle(3, -9, 1.5);
+        const scale = 2;
+        drawPixelSprite(g, NPC_SPRITE, NPC_PALETTE, scale, -8 * scale, -16 * scale);
     }
 
     _createHUD () {

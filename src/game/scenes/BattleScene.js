@@ -4,6 +4,7 @@ import { CHARACTERS } from '../CharacterData';
 import { ENEMIES } from '../EnemiesData';
 import { SKILLS, getTypeMultiplier } from '../SkillsData';
 import { PlayerState } from '../PlayerState';
+import { drawPixelSprite, getPlayerSprite, getEnemySprite } from '../SpriteData';
 
 export class BattleScene extends Scene
 {
@@ -100,37 +101,16 @@ export class BattleScene extends Scene
         return container;
     }
 
-    _drawBigPlayerSprite (g, color) {
-        g.clear();
-        g.fillStyle(color, 1);
-        g.fillRect(-22, -10, 44, 50);
-        g.fillStyle(0xffd166, 1);
-        g.fillCircle(0, -28, 22);
-        g.fillStyle(0x080818, 1);
-        g.fillCircle(-7, -30, 4);
-        g.fillCircle(7, -30, 4);
-        g.fillStyle(0xffffff, 1);
-        g.fillRect(-8, 5, 16, 10);
-        // Arm with weapon
-        g.fillStyle(color, 0.8);
-        g.fillRect(22, -5, 12, 35);
+    _drawBigPlayerSprite (g, _color) {
+        const { data, palette } = getPlayerSprite(this.characterId);
+        const scale = 4;
+        drawPixelSprite(g, data, palette, scale, -8 * scale, -16 * scale);
     }
 
-    _drawBigEnemySprite (g, color) {
-        g.clear();
-        g.fillStyle(color, 0.9);
-        g.fillRect(-20, -5, 40, 45);
-        g.fillStyle(0xffe8d6, 1);
-        g.fillCircle(0, -25, 20);
-        g.fillStyle(color, 1);
-        g.fillCircle(-6, -27, 4);
-        g.fillCircle(6, -27, 4);
-        g.lineStyle(3, 0x222222);
-        g.lineBetween(-12, -36, -3, -32);
-        g.lineBetween(12, -36, 3, -32);
-        // Evil accessory
-        g.fillStyle(0xffffff, 0.8);
-        g.fillRect(-10, -8, 20, 4);
+    _drawBigEnemySprite (g, _color) {
+        const { data, palette } = getEnemySprite(this.enemyId);
+        const scale = 4;
+        drawPixelSprite(g, data, palette, scale, -8 * scale, -16 * scale);
     }
 
     _createHPBar (x, y, hp, maxHp, label, color) {

@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
 import { CHARACTER_LIST } from '../CharacterData';
 import { PlayerState } from '../PlayerState';
+import { drawPixelSprite, getPlayerSprite } from '../SpriteData';
 
 const STAT_LABELS = ['technique', 'scalabilite', 'creativite', 'charisme'];
 const STAT_COLORS = { technique: 0xf89820, scalabilite: 0x4a90d9, creativite: 0xa855f7, charisme: 0x2dc653 };
@@ -60,7 +61,7 @@ export class StarterScene extends Scene
         container.add(bar);
 
         // Character sprite (programmatic)
-        const sprite = this._makeCharSprite(char.color);
+        const sprite = this._makeCharSprite(char.id);
         sprite.setPosition(0, -h / 2 + 50);
         container.add(sprite);
 
@@ -158,19 +159,12 @@ export class StarterScene extends Scene
         });
     }
 
-    _makeCharSprite(color)
+    _makeCharSprite(charId)
     {
         const g = this.add.graphics();
-        // Body
-        g.fillStyle(color, 1);
-        g.fillRect(-12, -8, 24, 26);
-        // Head
-        g.fillStyle(0xffd166, 1);
-        g.fillCircle(0, -16, 12);
-        // Eyes
-        g.fillStyle(0x080818, 1);
-        g.fillCircle(-4, -17, 2);
-        g.fillCircle(4, -17, 2);
+        const { data, palette } = getPlayerSprite(charId);
+        const scale = 3;
+        drawPixelSprite(g, data, palette, scale, -8 * scale, -16 * scale);
         return g;
     }
 }
