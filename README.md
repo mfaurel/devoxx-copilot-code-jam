@@ -1,3 +1,10 @@
+# Code Game Jam
+
+Jeu créé en 2 heures en Phaser à la suite d'un Code Gamejam
+
+
+
+
 # Phaser React Template
 
 This is a Phaser project template that uses the React framework and Vite for bundling. It includes a bridge for React to Phaser game communication, hot-reloading for quick development workflow and scripts to generate production-ready builds.
